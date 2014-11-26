@@ -1,0 +1,196 @@
+#!/usr/bin/env python
+from __future__ import with_statement
+import argparse, re, subprocess, os
+
+
+def init_argparse():
+    parser = argparse.ArgumentParser(description="%(prog)s", prog="Instavpn CLI")
+
+    subparsers = parser.add_subparsers(dest="subparser")
+    subparsers.add_parser('list', help='Show all credentials')
+    psk = subparsers.add_parser('psk', help='Get/set pre-shared key').add_subparsers(dest="psk")
+    psk.add_parser('get', help='Get pre-shared key')
+    psk.add_parser('set', help='Set pre-shared key').add_argument('key')
+    user = subparsers.add_parser('user', help='Create, modify and delete users').add_subparsers(dest="user")
+    user.add_parser('list', help='List all users')
+    user.add_parser('get', help='Get password').add_argument('username')
+    _set = user.add_parser('set', help='Set password or create user if not exists')
+    _set.add_argument('username')
+    _set.add_argument('password')
+    user.add_parser('delete', help='Delete user').add_argument('username')
+    subparsers.add_parser('stat', help='Bandwidth statistics')
+    subparsers.add_parser('web', help='Turn on/off web UI').add_argument('mode', choices=["on", "off"])
+
+    return parser.parse_args()
+
+
+class IO:
+    def __init__(self):
+        self.__chap_secrets()
+        self.__ipsec_secrets()
+
+
+    def __chap_secrets(self):
+        with open('/etc/ppp/chap-secrets', 'r') as f:
+            strings = f.read().split('\n')
+
+            if strings[len(strings) - 1] == '':
+                del strings[len(strings) - 1]  # remove empty string
+
+            self.users = {}
+
+            for string in strings:
+                user = string.split(' ')
+                self.users[user[0]] = user[2]
+
+
+    def __ipsec_secrets(self):
+        with open('/etc/ipsec.secrets', 'r') as f:
+            string = f.read().replace('\n', '').split('"')
+            self.psk = string[1]
+
+    @staticmethod
+    def __restart():
+        print 'Restarting VPN server...'
+        FNULL = open(os.devnull, 'w')
+        if subprocess.call("/etc/init.d/ipsec restart && /etc/init.d/xl2tpd restart", stdout=FNULL,
+                           stderr=subprocess.STDOUT, shell=True) == 0:
+            print 'OK!'
+        else:
+            print 'Error!'
+
+    def save(self):
+
+        with open('/etc/ipsec.secrets', 'r+') as f:
+            string_orig = f.read()
+            string_arr = string_orig.replace('\n', '').split('"')
+            string_orig = string_orig.replace(string_arr[1], self.psk)
+            f.seek(0)
+            f.write(string_orig)
+            f.truncate()
+
+        with open('/etc/ppp/chap-secrets', 'w') as f:
+            for username in self.users:
+                f.write(username + ' l2tpd ' + self.users[username] + ' *\n')
+            f.truncate()
+
+        self.__restart()
+
+
+class Util:
+    def __init__(self, args):
+        self.__args = args
+        self.__io = IO()
+
+    def __users_table(self):
+
+        _list = {"Username": "Password", "": ""}
+        _list.update(self.__io.users)
+        width_col1 = max([len(x) for x in _list.keys()])
+        width_col2 = max([len(x) for x in _list.values()])
+
+        def f(ind):
+            return _list[ind]
+
+        for i in _list:
+            print "|{0:<{col1}}|{1:<{col2}}|".format(i, f(i), col1=width_col1, col2=width_col2)
+
+    @staticmethod
+    def __regex_check(string):
+        regexp = re.compile("^([a-zA-Z]|\d){6,32}$")
+        return re.match(regexp, string) is not None
+
+    def psk_get(self):
+        print self.__io.psk
+
+    def psk_set(self):
+        if self.__regex_check(self.__args.key):
+            self.__io.psk = self.__args.key
+            self.__io.save()
+        else:
+            print 'All fields must contain alphanumeric characters only and have length between 6 and 32'
+
+
+    def user_get(self):
+        if self.__io.users.has_key(self.__args.username):
+            print self.__io.users[self.__args.username]
+        else:
+            print 'No such user'
+
+    def user_set(self):
+        if self.__regex_check(self.__args.username) and self.__regex_check(self.__args.password):
+            self.__io.users[self.__args.username] = self.__args.password
+            self.__io.save()
+        else:
+            print 'All fields must contain alphanumeric characters only and have length between 6 and 32'
+
+    def user_delete(self):
+        if self.__io.users.has_key(self.__args.username):
+            del self.__io.users[self.__args.username]
+            self.__io.save()
+        else:
+            print 'No such user'
+
+    def user_list(self):
+        print
+        self.__users_table()
+        print
+
+    def list(self):
+        print
+        print 'Pre-shared key: ', self.__io.psk
+        print
+        self.__users_table()
+        print
+
+    @staticmethod
+    def web():
+        print 'Not implemented'
+
+    @staticmethod
+    def stat():
+        subprocess.call("vnstat", shell=True)
+
+
+def route(args):
+    util = Util(args)
+    if args.subparser == 'psk':
+
+        if args.psk == 'get':
+            util.psk_get()
+        elif args.psk == 'set':
+            util.psk_set()
+
+    elif args.subparser == 'user':
+
+        if args.user == 'get':
+            util.user_get()
+        elif args.user == 'set':
+            util.user_set()
+        elif args.user == 'delete':
+            util.user_delete()
+        elif args.user == 'list':
+            util.user_list()
+
+    elif args.subparser == 'stat':
+
+        util.stat()
+
+    elif args.subparser == 'web':
+
+        util.web()
+
+    elif args.subparser == 'list':
+
+        util.list()
+
+
+def main():
+    args = init_argparse()
+    route(args)
+
+if os.getuid() == 0:
+    main()
+else:
+    print "I cannot run as a mortal. Use 'sudo instavpn <args>'"
+
