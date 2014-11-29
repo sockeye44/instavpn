@@ -10,7 +10,7 @@ module.exports = function(root) {
 
   return {
     env: env,
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 8080,
     path: {
       root: root,
