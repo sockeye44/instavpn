@@ -1,0 +1,15 @@
+{
+  "Username": "Username",
+  "Password": "Password",
+  "Sign in": "Sign in",
+  "Statistics": "Statistics",
+  "Log out": "Log out",
+  "Users": "Users",
+  "Pre-shared key": "Pre-shared key",
+  "Save": "Save",
+  "Your session has expired. Please log in again": "Your session has expired. Please log in again",
+  "Too many requests, please wait %s seconds": "Too many requests, please wait %s seconds",
+  "Incorrect password": "Incorrect password",
+  "All fields must contain alphanumeric characters only and have length between 6 and 32": "All fields must contain alphanumeric characters only and have length between 6 and 32",
+  "Ok": "Ok"
+}

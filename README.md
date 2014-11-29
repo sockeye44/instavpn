@@ -21,3 +21,4 @@ Coming soon
 * `instavpn user delete <username>` - Delete user
 * `instavpn user list` - List all users
 * `instavpn web [on|off]` - Turn on/off web UI
+* `instavpn web set <username> <password>` - Set username/password for web UI

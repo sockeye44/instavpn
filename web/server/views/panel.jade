@@ -1,0 +1,80 @@
+doctype html
+html
+    include block/head
+    body#panel
+        a(href='https://github.com/sockeye44/instavpn')
+            img(style='position: absolute; top: 0; right: 0; border: 0;', src='https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67', alt='Fork me on GitHub', data-canonical-src='https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png')
+
+        .container-fluid
+            .masthead
+                h1.text-muted InstaVPN
+            .well.center-block
+                ul.nav.nav-tabs
+                    li.active
+                        a(href='#stat', data-toggle='tab') #{__("Statistics")}
+                    li
+                        a(href='#users', data-toggle='tab') #{__("Users")}
+                    li
+                        a(href="/logout") #{__("Log out")}
+                .tab-content.center-block
+                    #stat.tab-pane.active
+                        .row
+                            .col-xs-12
+                                img.img-responsive.center-block(src='images/vnstat.png')
+                    #users.tab-pane
+
+                        include block/flash
+
+                        .row
+                            .col-xs-10
+                                h4 #{__("Pre-shared key")}
+                            .col-xs-2
+
+                        form.form-psk(role='form' action="/panel", method="post")
+                            .form-group
+                                .row
+                                    .col-xs-10
+                                        input.psk.form-control(placeholder=__("Pre-shared key"), value=psk name='psk')
+                                    .col-xs-2
+                            .form-group
+                                .row
+                                    .col-xs-10
+                                        button.btn.btn-primary.psk-save(type='submit')
+                                            span.glyphicon.glyphicon-save(aria-hidden='true')
+                                            span  #{__("Save")}
+                                    .col-xs-2
+                        .row
+                            .col-xs-10
+                                h4 #{__("Users")}
+                            .col-xs-2
+
+
+                        form.form-users(role='form' action="/panel", method="post")
+                            .form-group
+                                .row
+                                    .col-xs-5
+                                        label #{__("Username")}
+                                    .col-xs-5
+                                        label #{__("Password")}
+                                    .col-xs-2
+                            .form-group.users
+                                each value, index in users
+                                    include block/user
+                            .form-group
+                                .row
+                                    .col-xs-10
+                                    .col-xs-2
+                                        a.user-add.btn.btn-success
+                                            span.glyphicon.glyphicon-plus(aria-hidden='true')
+                            .form-group
+                                .row
+                                    .col-xs-10
+                                        button.btn.btn-primary.users-save(type='submit')
+                                            span.glyphicon.glyphicon-save(aria-hidden='true')
+                                            span  #{__("Save")}
+                                    .col-xs-2
+                .hidden
+                    each value, index in hiddenUser
+                        include block/user
+
+        include block/scripts

@@ -1,0 +1,10 @@
+.row.user
+    .col-xs-5
+        input.form-control(placeholder=__("Username"), type='text', value=value['username'], name='users['+index+'][0]')
+        input(type='hidden', value='l2tpd', name='users['+index+'][1]')
+    .col-xs-5
+        input.form-control(placeholder=__("Password"), type='text', value=value['password'], name='users['+index+'][2]')
+        input(type='hidden', value='*', name='users['+index+'][3]')
+    .col-xs-2
+        button.user-del.btn.btn-danger
+            span.glyphicon.glyphicon-remove(aria-hidden='true')

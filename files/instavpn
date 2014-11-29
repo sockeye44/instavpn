@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from __future__ import with_statement
-import argparse, re, subprocess, os
-
+import argparse, re, subprocess, os, fileinput, json
 
 def init_argparse():
     parser = argparse.ArgumentParser(description="%(prog)s", prog="Instavpn CLI")
@@ -19,12 +18,19 @@ def init_argparse():
     _set.add_argument('password')
     user.add_parser('delete', help='Delete user').add_argument('username')
     subparsers.add_parser('stat', help='Bandwidth statistics')
-    subparsers.add_parser('web', help='Turn on/off web UI').add_argument('mode', choices=["on", "off"])
+    _web = subparsers.add_parser('web', help='Turn on/off web UI')
+    _web.add_argument('mode', choices=["on", "off"])
+    _web_set = _web.add_subparsers(dest="web").add_parser('set', help='Set username/password for web UI')
+    _web_set.add_argument('username')
+    _web_set.add_argument('password')
+
 
     return parser.parse_args()
 
 
 class IO:
+    FNULL = open(os.devnull, 'w')
+
     def __init__(self):
         self.__chap_secrets()
         self.__ipsec_secrets()
@@ -49,11 +55,9 @@ class IO:
             string = f.read().replace('\n', '').split('"')
             self.psk = string[1]
 
-    @staticmethod
-    def __restart():
+    def __restart(self):
         print 'Restarting VPN server...'
-        FNULL = open(os.devnull, 'w')
-        if subprocess.call("/etc/init.d/ipsec restart && /etc/init.d/xl2tpd restart", stdout=FNULL,
+        if subprocess.call("/etc/init.d/ipsec restart && /etc/init.d/xl2tpd restart", stdout=self.FNULL,
                            stderr=subprocess.STDOUT, shell=True) == 0:
             print 'OK!'
         else:
@@ -142,10 +146,42 @@ class Util:
         print
         self.__users_table()
         print
+        print 'Web UI credentials:'
+        with open('/opt/instavpn/server/credentials.json') as f:
+            json_data = json.load(f.read())
+            print 'Username - ', json_data['admin']['login']
+            print 'Password - ', json_data['admin']['password']
 
-    @staticmethod
-    def web():
-        print 'Not implemented'
+    def web(self):
+        if self.__args.mode is not None:
+            if self.__args.mode == 'on':
+                for line in fileinput.input("/etc/init/instavpn.conf", inplace=True):
+                    print line.replace('manual', '#manual'),
+                if subprocess.call("start instavpn", stdout=self.FNULL, stderr=subprocess.STDOUT, shell=True) == 0:
+                    print 'OK!'
+                else:
+                    print 'Error!'
+            elif self.__args.mode == 'off':
+                for line in fileinput.input("/etc/init/instavpn.conf", inplace=True):
+                    print line.replace('#manual', 'manual'),
+                if subprocess.call("stop instavpn", stdout=self.FNULL, stderr=subprocess.STDOUT, shell=True) == 0:
+                    print 'OK!'
+                else:
+                    print 'Error!'
+
+
+    def web_set(self):
+        if self.__regex_check(self.__args.username) and self.__regex_check(self.__args.password):
+            with open('/opt/instavpn/server/credentials.json', 'r+') as f:
+                json_data = json.load(f.read())
+                json_data['admin']['login'] = self.__args.username
+                json_data['admin']['password'] = self.__args.password
+                f.seek(0)
+                f.write(json.dumps(json_data))
+                f.truncate()
+                json_data.close()
+        else:
+            print 'All fields must contain alphanumeric characters only and have length between 6 and 32'
 
     @staticmethod
     def stat():
@@ -173,15 +209,15 @@ def route(args):
             util.user_list()
 
     elif args.subparser == 'stat':
-
         util.stat()
 
     elif args.subparser == 'web':
-
-        util.web()
+        if args.web == 'set':
+            util.web_set()
+        else:
+            util.web()
 
     elif args.subparser == 'list':
-
         util.list()
 
 

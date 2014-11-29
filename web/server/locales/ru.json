@@ -1,0 +1,15 @@
+{
+	"Username": "Имя пользователя",
+	"Password": "Пароль",
+	"Sign in": "Вход",
+	"Statistics": "Статистика",
+	"Log out": "Выход",
+	"Users": "Пользователи",
+	"Pre-shared key": "Общий ключ",
+	"Save": "Сохранить",
+	"Your session has expired. Please log in again": "Ваша сессия истекла. Повторите попытку авторизации",
+	"Too many requests, please wait %s seconds": "Слишком много запросов, попробуйте через %s секунд",
+	"Incorrect password": "Неверный пароль",
+	"All fields must contain alphanumeric characters only and have length between 6 and 32": "Все поля должны быть длиной от 6 до 32 символов и содержать только латинские буквы и цифры",
+	"Ok": "Ok"
+}
