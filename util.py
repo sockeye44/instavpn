@@ -124,7 +124,7 @@ def webui(logger):
     logger.log_debug('Generate random password')
     char_set = string.ascii_lowercase + string.ascii_uppercase + string.digits
     with open('web/server/credentials.json', 'r+') as f:
-        json_data = json.load(f.read())
+        json_data = json.loads(f.read())
         json_data['admin']['password'] = ''.join(random.sample(char_set * 16, 16))
         f.seek(0)
         f.write(json.dumps(json_data))
