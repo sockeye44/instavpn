@@ -42,6 +42,12 @@ def main():
     else:
         log.log_error("Fail")
 
+    log.log_info("Installing web UI...")
+    if util.webui(log):
+        log.log_info("OK")
+    else:
+        log.log_error("Fail")
+
     log.log_info("")
     log.log_info("Completed. Run 'instavpn -h' for help")
 

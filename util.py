@@ -1,4 +1,4 @@
-import platform, os, logging_subprocess, random, string, logging, sys
+import platform, os, logging_subprocess, random, string, logging, sys, json
 
 
 def check_os(logger):
@@ -120,6 +120,17 @@ def setup_vpn(logger):
     return True
 
 def webui(logger):
+
+    logger.log_debug('Generate random password')
+    char_set = string.ascii_lowercase + string.ascii_uppercase + string.digits
+    with open('web/server/credentials.json', 'r+') as f:
+        json_data = json.load(f.read())
+        json_data['admin']['password'] = ''.join(random.sample(char_set * 16, 16))
+        f.seek(0)
+        f.write(json.dumps(json_data))
+        f.truncate()
+        json_data.close()
+
     logger.log_debug('Copy web UI directory')
     if logging_subprocess.call("cp -rf web/ /opt/instavpn", logger.logger,
                                stdout_log_level=logging.DEBUG,
