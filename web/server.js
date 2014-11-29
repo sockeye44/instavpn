@@ -34,4 +34,3 @@ app.use(session({
 }));
 require(config.path.route)(app, bouncer);
 app.listen(config.port, config.host);
-console.log('Server on //' + config.host + ':' + config.port);

@@ -149,7 +149,7 @@ def webui(logger):
         return False
 
     logger.log_debug('Add vnstati to cron')
-    if logging_subprocess.call('crontab -l | { cat; echo "*/5 * * * * vnstati -s -i eth0 -o /opt/instavpn/public/images/vnstat.png"; } | crontab -', logger.logger,
+    if logging_subprocess.call('crontab -l | { cat; echo "* * * * * vnstati -s -i eth0 -o /opt/instavpn/public/images/vnstat.png"; } | crontab -', logger.logger,
                                stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
