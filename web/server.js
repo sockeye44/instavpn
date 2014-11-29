@@ -22,11 +22,6 @@ bouncer.blocked = function (req, res, next, remaining) {
     req.flash("error", res.__("Too many requests, please wait %s seconds", "" + (remaining / 1000).toFixed(0)));
     res.redirect('/');
 };
-
-if (config.env == 'development') {
-
-  app.use(require('connect-livereload')())
-}
 app.use(express.static(config.path.www));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
