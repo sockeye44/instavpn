@@ -18,9 +18,9 @@ def init_argparse():
     _set.add_argument('password')
     user.add_parser('delete', help='Delete user').add_argument('username')
     subparsers.add_parser('stat', help='Bandwidth statistics')
-    _web = subparsers.add_parser('web', help='Turn on/off web UI')
-    _web.add_argument('mode', choices=["on", "off"])
-    _web_set = _web.add_subparsers(dest="web").add_parser('set', help='Set username/password for web UI')
+    _web = subparsers.add_parser('web', help='Control web UI').add_subparsers(dest="web")
+    _web.add_parser('mode', help='Turn on/off web UI').add_argument('mode', choices=["on", "off"])
+    _web_set = _web.add_parser('set', help='Set username/password for web UI')
     _web_set.add_argument('username')
     _web_set.add_argument('password')
 

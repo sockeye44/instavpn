@@ -9,7 +9,7 @@
 ##### `curl -sS https://sockeye.cc/instavpn.sh | sudo bash`
 
 ### Web UI
-Coming soon
+Browse at http://<ip address>:8080
 
 ### CLI
 * `instavpn list` - Show all credentials
@@ -20,5 +20,5 @@ Coming soon
 * `instavpn user set <username> <password>` - Set password or create user if not exists
 * `instavpn user delete <username>` - Delete user
 * `instavpn user list` - List all users
-* `instavpn web [on|off]` - Turn on/off web UI
+* `instavpn web mode [on|off]` - Turn on/off web UI
 * `instavpn web set <username> <password>` - Set username/password for web UI
