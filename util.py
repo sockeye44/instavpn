@@ -129,7 +129,6 @@ def webui(logger):
         f.seek(0)
         f.write(json.dumps(json_data))
         f.truncate()
-        json_data.close()
 
     logger.log_debug('Copy web UI directory')
     if logging_subprocess.call("cp -rf web/ /opt/instavpn", logger.logger,

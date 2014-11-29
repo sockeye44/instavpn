@@ -179,7 +179,6 @@ class Util:
                 f.seek(0)
                 f.write(json.dumps(json_data))
                 f.truncate()
-                json_data.close()
         else:
             print 'All fields must contain alphanumeric characters only and have length between 6 and 32'
 
