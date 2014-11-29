@@ -148,7 +148,7 @@ class Util:
         print
         print 'Web UI credentials:'
         with open('/opt/instavpn/server/credentials.json') as f:
-            json_data = json.load(f.read())
+            json_data = json.loads(f.read())
             print 'Username - ', json_data['admin']['login']
             print 'Password - ', json_data['admin']['password']
 

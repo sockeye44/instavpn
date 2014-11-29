@@ -27,7 +27,7 @@ def install_packages(logger):
         return False
 
     logger.log_debug('Install node.js')
-    if logging_subprocess.call("apt-get install -y nodejs npm build-essential libssl-dev", logger.logger,
+    if logging_subprocess.call("apt-get install -y nodejs-legacy npm build-essential libssl-dev", logger.logger,
                                stdout_log_level=logging.DEBUG, stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
