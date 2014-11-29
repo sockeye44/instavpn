@@ -5,7 +5,7 @@ var
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
   flash = require('connect-flash'),
-  md5 = require('md5'),
+  md5 = require('MD5'),
   session = require('express-session'),
   bouncer = require('express-bouncer')(),
   i18n = require('i18n')
