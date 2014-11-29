@@ -1,0 +1,27 @@
+{
+  "name": "instavpn",
+  "title": "InstaVPN Web UI",
+  "version": "0.1.1",
+  "description": "InstaVPN Web UI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sockeye44/instavpn.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "MD5": "*",
+    "body-parser": "*",
+    "connect-flash": "*",
+    "cookie-parser": "*",
+    "express": "*",
+    "express-bouncer": "*",
+    "express-session": "*",
+    "i18n": "*",
+    "jade": "*",
+    "method-override": "*",
+    "shelljs": "^0.3.0"
+  },
+  "engines": {
+    "node": "~0.10.25"
+  }
+}

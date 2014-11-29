@@ -1,0 +1,8 @@
+if locals.error != ''
+    .alert.alert-danger
+        a.close(href='#', data-dismiss='alert') ×
+        strong #{error}
+if locals.message != ''
+    .alert.alert-success
+        a.close(href='#', data-dismiss='alert') ×
+        strong #{message}

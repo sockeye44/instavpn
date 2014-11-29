@@ -1,4 +1,4 @@
-__version__ = "0.1"
+__version__ = "0.1.1"
 
 import log, util
 
@@ -38,6 +38,12 @@ def main():
 
     log.log_info("Adding script to rc.local...")
     if util.setup_vpn(log):
+        log.log_info("OK")
+    else:
+        log.log_error("Fail")
+
+    log.log_info("Installing web UI...")
+    if util.webui(log):
         log.log_info("OK")
     else:
         log.log_error("Fail")

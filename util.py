@@ -1,4 +1,4 @@
-import platform, os, logging_subprocess, random, string, logging, sys
+import platform, os, logging_subprocess, random, string, logging, sys, json
 
 
 def check_os(logger):
@@ -16,27 +16,27 @@ def not_sudo():
 
 
 def install_packages(logger):
-    logger.log_debug('Updating package lists')
+    logger.log_debug('Update package lists')
     if logging_subprocess.call("apt-get update", logger.logger, stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
-    logger.log_debug('Updating packages')
+    logger.log_debug('Update packages')
     if logging_subprocess.call("apt-get -y upgrade", logger.logger, stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
-    logger.log_debug('Installing node.js')
-    if logging_subprocess.call("apt-get install -y nodejs npm build-essential libssl-dev", logger.logger,
+    logger.log_debug('Install node.js')
+    if logging_subprocess.call("apt-get install -y nodejs-legacy npm build-essential libssl-dev", logger.logger,
                                stdout_log_level=logging.DEBUG, stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
-    logger.log_debug('Installing vnstat')
+    logger.log_debug('Install vnstat')
     if logging_subprocess.call("apt-get install -y vnstat vnstati", logger.logger, stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
-    logger.log_debug('Installing VPN server packages')
+    logger.log_debug('Install VPN server packages')
     if logging_subprocess.call("DEBIAN_FRONTEND=noninteractive apt-get install -q -y openswan xl2tpd ppp lsof",
                                logger.logger,
                                stdout_log_level=logging.DEBUG, stderr_log_level=logging.DEBUG, shell=True) != 0:
@@ -92,7 +92,7 @@ def cp_configs(logger):
 
 
 def setup_vpn(logger):
-    logger.log_debug('Writing setup-vpn.sh to /etc')
+    logger.log_debug('Write setup-vpn.sh to /etc')
     if logging_subprocess.call("cp files/setup-vpn.sh /etc/setup-vpn.sh", logger.logger, stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
@@ -116,5 +116,49 @@ def setup_vpn(logger):
                                stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
+
+    return True
+
+def webui(logger):
+
+    logger.log_debug('Generate random password')
+    char_set = string.ascii_lowercase + string.ascii_uppercase + string.digits
+    with open('web/server/credentials.json', 'r+') as f:
+        json_data = json.loads(f.read())
+        json_data['admin']['password'] = ''.join(random.sample(char_set * 16, 16))
+        f.seek(0)
+        f.write(json.dumps(json_data))
+        f.truncate()
+
+    logger.log_debug('Copy web UI directory')
+    if logging_subprocess.call("cp -rf web/ /opt/instavpn", logger.logger,
+                               stdout_log_level=logging.DEBUG,
+                               stderr_log_level=logging.DEBUG, shell=True) != 0:
+        return False
+
+    logger.log_debug('Install node_modules')
+    if logging_subprocess.call("cd /opt/instavpn && npm install", logger.logger,
+                               stdout_log_level=logging.DEBUG,
+                               stderr_log_level=logging.DEBUG, shell=True) != 0:
+        return False
+
+    logger.log_debug('Copy upstart script')
+    if logging_subprocess.call("cp files/instavpn.conf /etc/init", logger.logger,
+                               stdout_log_level=logging.DEBUG,
+                               stderr_log_level=logging.DEBUG, shell=True) != 0:
+        return False
+
+    logger.log_debug('Add vnstati to cron')
+    if logging_subprocess.call('crontab -l | { cat; echo "* * * * * vnstati -s -i eth0 -o /opt/instavpn/public/images/vnstat.png"; } | crontab -', logger.logger,
+                               stdout_log_level=logging.DEBUG,
+                               stderr_log_level=logging.DEBUG, shell=True) != 0:
+        return False
+
+    logger.log_debug('Start service')
+    if logging_subprocess.call("start instavpn", logger.logger,
+                               stdout_log_level=logging.DEBUG,
+                               stderr_log_level=logging.DEBUG, shell=True) != 0:
+        return False
+
 
     return True
