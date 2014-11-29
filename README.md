@@ -9,7 +9,7 @@
 ##### `curl -sS https://sockeye.cc/instavpn.sh | sudo bash`
 
 ### Web UI
-Browse at http://<ip address>:8080
+Browse at http://IP-ADDRESS:8080
 
 ### CLI
 * `instavpn list` - Show all credentials
