@@ -48,8 +48,6 @@ def main():
     else:
         log.log_error("Fail")
 
-    log.log_info("")
-    log.log_info("Completed. Run 'instavpn -h' for help")
-
+    util.info(log)
 
 main()

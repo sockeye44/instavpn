@@ -1,4 +1,4 @@
-import platform, os, logging_subprocess, random, string, logging, sys, json
+import platform, os, logging_subprocess, random, string, logging, sys, json, urllib2
 
 
 def check_os(logger):
@@ -160,5 +160,18 @@ def webui(logger):
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
-
     return True
+
+
+def info(logger):
+    
+    logger.log_info('')
+    
+    with open('/opt/instavpn/server/credentials.json') as f:
+        json_data = json.loads(f.read())
+        logger.log_info('Browse web UI at http://' + urllib2.urlopen("http://myip.dnsdynamic.org/").read() + ':8080/')
+        logger.log_info('Username: ' + json_data['admin']['login'] + ', password: ' + json_data['admin']['password'])
+    
+    logger.log_info('')
+
+    logger.log_info("Completed. Run 'instavpn -h' for help")
