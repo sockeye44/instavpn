@@ -2,9 +2,6 @@ import platform, os, logging_subprocess, random, string, logging, sys, json, url
 
 
 def check_os(logger):
-    if platform.system() != 'Linux':
-        logger.log_debug('OS: ' + platform.system())
-        return False
     if platform.linux_distribution() != ('Ubuntu', '14.04', 'trusty'):
         logger.log_debug('OS: ' + ' '.join(platform.linux_distribution()))
         return False
