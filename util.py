@@ -6,7 +6,7 @@ def check_os(logger):
         logger.log_debug('OS: ' + platform.system())
         return False
     if platform.linux_distribution() != ('Ubuntu', '14.04', 'trusty'):
-        logger.log_debug('OS: ' + platform.linux_distribution())
+        logger.log_debug('OS: ' + ' '.join(platform.linux_distribution()))
         return False
     return True
 
