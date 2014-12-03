@@ -117,7 +117,7 @@ def setup_vpn(logger):
         logging_subprocess.call("service ufw restart", logger.logger, stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True)
     except OSError as e:
-        logger.log_warn('uwf not found')
+        logger.log_warn('ufw not found')
     
     logger.log_debug('Copy CLI')
     if logging_subprocess.call("chmod +x files/instavpn && cp files/instavpn /usr/bin/instavpn", logger.logger,
