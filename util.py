@@ -114,7 +114,7 @@ def setup_vpn(logger):
     
     if logging_subprocess.call("service ufw restart", logger.logger, stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
-    return False
+        return False
     
     logger.log_debug('Copy CLI')
     if logging_subprocess.call("chmod +x files/instavpn && cp files/instavpn /usr/bin/instavpn", logger.logger,
