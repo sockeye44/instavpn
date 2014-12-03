@@ -108,6 +108,14 @@ def setup_vpn(logger):
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
+    logger.log_debug('Ufw default forward policy')
+    for line in fileinput.input("/etc/default/ufw", inplace=True):
+        print line.replace('DEFAULT_FORWARD_POLICY="DROP"', 'DEFAULT_FORWARD_POLICY="ACCEPT"'),
+    
+    if logging_subprocess.call("service ufw restart", logger.logger, stdout_log_level=logging.DEBUG,
+                               stderr_log_level=logging.DEBUG, shell=True) != 0:
+        return False
+    
     logger.log_debug('Copy CLI')
     if logging_subprocess.call("chmod +x files/instavpn && cp files/instavpn /usr/bin/instavpn", logger.logger,
                                stdout_log_level=logging.DEBUG,
