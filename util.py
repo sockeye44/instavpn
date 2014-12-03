@@ -1,4 +1,4 @@
-import platform, os, logging_subprocess, random, string, logging, sys, json, urllib2
+import platform, os, logging_subprocess, random, string, logging, sys, json, urllib2, fileinput
 
 
 def check_os(logger):
