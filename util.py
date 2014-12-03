@@ -109,12 +109,15 @@ def setup_vpn(logger):
         return False
 
     logger.log_debug('Ufw default forward policy')
-    for line in fileinput.input("/etc/default/ufw", inplace=True):
-        print line.replace('DEFAULT_FORWARD_POLICY="DROP"', 'DEFAULT_FORWARD_POLICY="ACCEPT"'),
     
-    if logging_subprocess.call("service ufw restart", logger.logger, stdout_log_level=logging.DEBUG,
-                               stderr_log_level=logging.DEBUG, shell=True) != 0:
-        return False
+    try:
+        for line in fileinput.input("/etc/default/ufw", inplace=True):
+            print line.replace('DEFAULT_FORWARD_POLICY="DROP"', 'DEFAULT_FORWARD_POLICY="ACCEPT"'),
+            
+        logging_subprocess.call("service ufw restart", logger.logger, stdout_log_level=logging.DEBUG,
+                               stderr_log_level=logging.DEBUG, shell=True)
+    except OSError as e:
+        logger.log_warn('uwf not found')
     
     logger.log_debug('Copy CLI')
     if logging_subprocess.call("chmod +x files/instavpn && cp files/instavpn /usr/bin/instavpn", logger.logger,
