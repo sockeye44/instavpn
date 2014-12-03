@@ -108,11 +108,11 @@ def setup_vpn(logger):
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
 
-    logger.log_debug('Ufw default forward policy')
+    logger.log_debug('Disable ufw')
     for line in fileinput.input("/etc/default/ufw", inplace=True):
         print line.replace('DEFAULT_FORWARD_POLICY="DROP"', 'DEFAULT_FORWARD_POLICY="ACCEPT"'),
     
-    if logging_subprocess.call("service ufw restart", logger.logger, stdout_log_level=logging.DEBUG,
+    if logging_subprocess.call("ufw disable", logger.logger, stdout_log_level=logging.DEBUG,
                                stderr_log_level=logging.DEBUG, shell=True) != 0:
         return False
     
