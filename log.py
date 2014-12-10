@@ -1,39 +1,39 @@
 import logging, StringIO, pastee, time, sys
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+class PasteBinLoggingHandler(logging.StreamHandler):
+    def __init__(self, *args, **kwargs):
+        self.buff = StringIO.StringIO()
+        logging.StreamHandler.__init__(self, self.buff)
 
-string_io = StringIO.StringIO()
+    def emit(self, record):
+        logging.StreamHandler.emit(self, record)
 
-pastebin_handler = logging.StreamHandler(string_io)
-pastebin_handler.setLevel(logging.DEBUG)
-
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-
-formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s', datefmt='%H:%M:%S')
-console_handler.setFormatter(formatter)
-pastebin_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
-logger.addHandler(pastebin_handler)
-
-
-def log_debug(msg):
-    logger.debug(msg)
+        # If we hit a critical error, we'll paste and quit
+        if record.levelno == logging.CRITICAL:
+            url = pastee.PasteClient().paste(self.buff.getvalue())
+            print("CRITICAL ERROR!")
+            print(" Crash report: {}".format(url))
+            print(" Support: https://github.com/sockeye44/instavpn/issues")
+            sys.exit(1)
 
 
-def log_info(msg):
-    logger.info(msg)
+def setup_logging():
+    # Get root logger and attach some formatters to it
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
+    pastebin_handler = PasteBinLoggingHandler()
+    pastebin_handler.setLevel(logging.DEBUG)
 
-def log_warn(msg):
-    logger.warn(msg)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
 
+    formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s',
+        datefmt='%H:%M:%S')
 
-def log_error(msg):
-    logger.critical(msg)
-    time.sleep(0.1)
-    print('CRITICAL ERROR!')
-    print('Crash report: ' + pastee.PasteClient().paste(string_io.getvalue()))
-    print('Support: https://github.com/sockeye44/instavpn/issues')
-    sys.exit(1)
+    console_handler.setFormatter(formatter)
+    pastebin_handler.setFormatter(formatter)
+
+    logger.addHandler(console_handler)
+    logger.addHandler(pastebin_handler)
+

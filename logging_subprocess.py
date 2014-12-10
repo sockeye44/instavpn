@@ -1,9 +1,12 @@
 import subprocess
 import select
-from logging import DEBUG, ERROR
+import logging
 
+logger = logging.getLogger(__name__)
 
-def call(popenargs, logger, stdout_log_level=DEBUG, stderr_log_level=ERROR, **kwargs):
+def call(popenargs,
+        stdout_log_level=logging.DEBUG,
+        stderr_log_level=logging.ERROR, **kwargs):
     child = subprocess.Popen(popenargs, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, **kwargs)
 
