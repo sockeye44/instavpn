@@ -1,53 +1,57 @@
 __version__ = "0.1.1"
 
-import log, util
+import log, util, logging
+
+log.setup_logging()
+
+logger = logging.getLogger(__name__)
 
 def main():
-    log.log_info("Checking your OS version...")
-    if util.check_os(log):
-        log.log_info("OK")
+    logger.info("Checking your OS version...")
+    if util.check_os():
+        logger.info("OK")
     else:
-        log.log_error("You must use Ubuntu 14.04")
+        logger.critical("You must use Ubuntu 14.04")
 
     if util.not_sudo():
-        log.log_error("Restart script as root")
+        logger.critical("Restart script as root")
 
-    log.log_info("Installing packages...")
-    if util.install_packages(log):
-        log.log_info("OK")
+    logger.info("Installing packages...")
+    if util.install_packages():
+        logger.info("OK")
     else:
-        log.log_error("Fail")
+        logger.critical("Failed to install packages")
 
-    log.log_info("Applying sysctl parameters...")
-    if util.setup_sysctl(log):
-        log.log_info("OK")
+    logger.info("Applying sysctl parameters...")
+    if util.setup_sysctl():
+        logger.info("OK")
     else:
-        log.log_error("Fail")
+        logger.critical("Failed to apply sysctl parameters")
 
-    log.log_info("Creating random passwords...")
-    if util.setup_passwords(log):
-        log.log_info("OK")
+    logger.info("Creating random passwords...")
+    if util.setup_passwords():
+        logger.info("OK")
     else:
-        log.log_error("Fail")
+        logger.critical("Failed to create random passwords")
 
-    log.log_info("Other config files...")
-    if util.cp_configs(log):
-        log.log_info("OK")
+    logger.info("Other config files...")
+    if util.cp_configs():
+        logger.info("OK")
     else:
-        log.log_error("Fail")
+        logger.critical("Fail")
 
-    log.log_info("Adding script to rc.local...")
-    if util.setup_vpn(log):
-        log.log_info("OK")
+    logger.info("Adding script to rc.local...")
+    if util.setup_vpn():
+        logger.info("OK")
     else:
-        log.log_error("Fail")
+        logger.critical("Failed adding script to rc.local")
 
-    log.log_info("Installing web UI...")
-    if util.webui(log):
-        log.log_info("OK")
+    logger.info("Installing web UI...")
+    if util.webui():
+        logger.info("OK")
     else:
-        log.log_error("Fail")
+        logger.critical("Failed installing web UI")
 
-    util.info(log)
+    util.info()
 
 main()
