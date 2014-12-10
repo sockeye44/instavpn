@@ -121,7 +121,7 @@ CRONTAB = 'crontab -l | { cat; echo "* * * * * vnstati -s -i eth0 -o /opt/instav
 def webui():
     logger.debug('Generate random password')
     char_set = string.ascii_lowercase + string.ascii_uppercase + string.digits
-    with open('web/server/credentials.json', 'r+') as f:
+    with open('web/server/credentials.json', 'w') as f:
         json.dump({
             "admin": {
                 "login": "admin",
@@ -160,5 +160,5 @@ def info():
         logger.info('Browse web UI at http://' + urllib2.urlopen("http://myip.dnsdynamic.org/").read() + ':8080/')
         logger.info("  Username: {}".format(json_data["admin"]["login"]))
         logger.info("  Password: {}".format(json_data["admin"]["password"]))
-    
+
     logger.info("Completed. Run 'instavpn -h' for help")
