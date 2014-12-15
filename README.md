@@ -4,6 +4,8 @@
 ### Requirements
 * Ubuntu 14.04
 * 512 MB RAM
+* curl
+* git
 
 ### Install
 ##### `curl -sS https://sockeye.cc/instavpn.sh | sudo bash`
