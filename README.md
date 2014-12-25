@@ -2,7 +2,7 @@
 ========
 
 ### Requirements
-* Ubuntu 14.04
+* Ubuntu >= 14.04 or Centos >= 6.5
 * 512 MB RAM
 
 ### Install
