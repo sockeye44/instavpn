@@ -80,7 +80,7 @@ def install_packages_ubuntu():
 
 def install_node():
     if run_command("node -v"):
-        logger.debug("node already installed")
+        logger.info("node already installed")
         return True
 
     if not run_command("nvm --version"):
