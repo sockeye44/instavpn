@@ -18,6 +18,7 @@ def check_os():
     if a == 'Ubuntu'and float(b) >= 14.04:
             return True
     elif a[:6] == 'CentOS' and float(b[:3]) >= 6.5:
+        global isUbuntu
         isUbuntu = False
         return True
     return False
