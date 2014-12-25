@@ -11,7 +11,7 @@ module.exports = function(root) {
   return {
     env: env,
     host: '0.0.0.0',
-    port: 8080,
+    port: 7000,
     path: {
       root: root,
       www: root + '/public',

@@ -11,7 +11,7 @@ def main():
     if util.check_os():
         logger.info("OK")
     else:
-        logger.critical("You must use Ubuntu 14.04")
+        logger.critical("You must use Ubuntu >= 14.04  or Centos >= 6.5")
 
     if util.not_sudo():
         logger.critical("Restart script as root")

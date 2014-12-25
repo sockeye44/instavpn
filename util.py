@@ -2,6 +2,8 @@ import platform, os, logging_subprocess, random, string, logging, sys, json, url
 
 logger = logging.getLogger()
 
+isUbuntu = True
+
 string_pool = string.ascii_letters + string.digits
 gen_random_text = lambda s: ''.join(map(lambda _: random.choice(string_pool), range(s)))
 
@@ -12,15 +14,45 @@ def run_command(cmd):
             shell=True))
 
 def check_os():
-    if platform.linux_distribution() != ('Ubuntu', '14.04', 'trusty'):
-        logger.debug('OS: ' + ' '.join(platform.linux_distribution()))
-        return False
-    return True
+    (a,b,c) = platform.linux_distribution()
+    if a == 'Ubuntu'and float(b) >= 14.04:
+            return True
+    elif a[:6] == 'CentOS' and float(b[:3]) >= 6.5:
+        isUbuntu = False
+        return True
+    return False
 
 def not_sudo():
     return os.getuid() != 0
 
 def install_packages():
+    if isUbuntu:
+        return install_packages_ubuntu()
+
+    return install_packages_centos()
+
+def install_packages_centos():
+    logger.debug('Update package lists')
+    if not run_command("yum update"):
+        return False
+
+    logger.debug('Update packages')
+    if not run_command("yum -y upgrade"):
+        return False
+
+    if not install_node():
+        return False
+
+    logger.debug('Install vnstat')
+    if not run_command("yum install -y vnstat vnstati"):
+        return False
+
+    logger.debug('Install VPN server packages')
+    if not run_command("DEBIAN_FRONTEND=noninteractive yum install -q -y openswan xl2tpd ppp lsof"):
+        return False
+    return True
+
+def install_packages_ubuntu():
     logger.debug('Update package lists')
     if not run_command("apt-get update"):
         return False
@@ -29,8 +61,11 @@ def install_packages():
     if not run_command("apt-get -y upgrade"):
         return False
 
-    logger.debug('Install node.js')
-    if not run_command("apt-get install -y nodejs-legacy npm build-essential libssl-dev"):
+    #logger.debug('Install node.js')
+    #if not run_command("apt-get install -y nodejs-legacy npm build-essential libssl-dev"):
+     #   return False
+
+    if not install_node():
         return False
 
     logger.debug('Install vnstat')
@@ -43,6 +78,23 @@ def install_packages():
 
     return True
 
+def install_node():
+    if run_command("node -v"):
+        logger.debug("node already installed")
+        return True
+
+    if not run_command("nvm --version"):
+        logger.debug("Install nvm")
+        if not run_command("curl https://raw.githubusercontent.com/creationix/nvm/v0.21.0/install.sh | bash"):
+            return False
+        run_command("source ~/.nvm/nvm.sh")
+
+    if not run_command("nvm use 0.10.33"):
+        logger.debug('Install node.js')
+        if not run_command("nvm install 0.10"):
+            return False
+
+    return True
 
 def setup_sysctl():
     if not run_command("sh files/sysctl.sh"):
