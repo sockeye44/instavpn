@@ -34,7 +34,7 @@ def install_packages():
 
 def install_packages_centos():
     logger.debug('Update package lists')
-    if not run_command("yum update"):
+    if not run_command("yum -y update"):
         return False
 
     logger.debug('Update packages')
@@ -210,7 +210,7 @@ def info():
 
     with open('/opt/instavpn/server/credentials.json') as f:
         json_data = json.load(f)
-        logger.info('Browse web UI at http://' + urllib2.urlopen("http://myip.dnsdynamic.org/").read() + ':8080/')
+        logger.info('Browse web UI at http://' + urllib2.urlopen("http://myip.dnsdynamic.org/").read() + ':7000/')
         logger.info("  Username: {}".format(json_data["admin"]["login"]))
         logger.info("  Password: {}".format(json_data["admin"]["password"]))
 
