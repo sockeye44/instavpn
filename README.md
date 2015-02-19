@@ -1,4 +1,4 @@
-![img](http://sockeye.cc/img/instavpn.png)
+![img](http://i.imgur.com/67dwCdA.png)
 ========
 
 ### Requirements
