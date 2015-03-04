@@ -90,9 +90,7 @@ def setup_vpn():
 
     logger.debug('Add to rc.local')
     try:
-        f = open('/etc/rc.local', 'w')
-        f.write('bash /etc/setup-vpn.sh\nexit 0')
-        f.close()
+        with open('/etc/rc.local', 'w') as modified: modified.write("bash /etc/setup-vpn.sh\n" + data)
     except:
         logger.exception("Exception setting up vpn:")
         return False
