@@ -57,7 +57,7 @@ def setup_passwords():
         pw1 = gen_random_text(12)
         pw2 = gen_random_text(12)
         f.write("username1 l2tpd {} *\n".format(pw1))
-        f.write("username2 l2tpd {} *\n".format(pw2))
+        f.write("username2 l2tpd {} *".format(pw2))
         f.close()
         f = open('/etc/ipsec.secrets', 'w')
         f.write('1.2.3.4 %any: PSK "{}"'.format(gen_random_text(16)))
