@@ -11,5 +11,5 @@
   "Too many requests, please wait %s seconds": "请求次数过多, 请 %s 秒之后重试。",
   "Incorrect password": "密码错误",
   "All fields must contain alphanumeric characters only and have length between 6 and 32": "输入的字节数需要在 6 到 32 之间",
-  "Ok": "好"
+  "Ok": "确定"
 }
