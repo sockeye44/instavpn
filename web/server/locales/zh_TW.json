@@ -1,0 +1,15 @@
+{
+  "Username": "帳號",
+  "Password": "密碼",
+  "Sign in": "登入",
+  "Statistics": "統計信息",
+  "Log out": "登出",
+  "Users": "帳號",
+  "Pre-shared key": "預共享密钥",
+  "Save": "存檔",
+  "Your session has expired. Please log in again": "您的登入已失效，請重新登入！",
+  "Too many requests, please wait %s seconds": "您的請求訪問次數過多, 請 %s 秒之後重新訪問。",
+  "Incorrect password": "密碼錯誤",
+  "All fields must contain alphanumeric characters only and have length between 6 and 32": "輸入的單詞需要在 6 到 32 之間。",
+  "Ok": "確定"
+}

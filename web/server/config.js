@@ -20,7 +20,7 @@ module.exports = function(root) {
       views: __dirname + '/views'
     },
     i18n: {
-      locales: ['en', 'ru', 'zh_CN'],
+      locales: ['en', 'ru', 'zh_CN' ,'zh_TW'],
       defaultLocale: 'en',
       directory: __dirname + '/locales'
     },
