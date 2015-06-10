@@ -1,0 +1,15 @@
+{
+  "Username": "用户名",
+  "Password": "密码",
+  "Sign in": "登陆",
+  "Statistics": "统计信息",
+  "Log out": "退出",
+  "Users": "用户",
+  "Pre-shared key": "预共享密钥",
+  "Save": "保存",
+  "Your session has expired. Please log in again": "您的登陆已失效，请重新登录！",
+  "Too many requests, please wait %s seconds": "请求次数过多, 请 %s 秒之后重试。",
+  "Incorrect password": "密码错误",
+  "All fields must contain alphanumeric characters only and have length between 6 and 32": "输入的字节数需要在 6 到 32 之间",
+  "Ok": "确定"
+}
