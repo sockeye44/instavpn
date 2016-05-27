@@ -6,7 +6,7 @@
 * 512 MB RAM
 
 ### Install
-##### `curl -sS https://raw.githubusercontent.com/SVITY/instavpn/master/instavpn.sh | sudo bash`
+##### `curl -sS https://raw.githubusercontent.com/sockeye44/instavpn/master/instavpn.sh | sudo bash`
 
 ### Web UI
 Browse at http://IP-ADDRESS:8080
