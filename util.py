@@ -129,7 +129,7 @@ def webui():
 
     logger.debug('Copy web UI directory')
     # it fix web UI critical error
-    if not run_command("mkdir --mode=755 /opt"):
+    if not run_command("mkdir --mode=755 -p /opt"):
         return False
     #end
     if not run_command("cp -rf web/ /opt/instavpn"):
