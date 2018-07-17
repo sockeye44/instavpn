@@ -1,6 +1,8 @@
 ![img](http://i.imgur.com/67dwCdA.png)
 ========
 
+## This project is deprecated! It works well with Ubuntu 14.04, but will not work with next releases
+
 ### Requirements
 * Ubuntu 14.04
 * 512 MB RAM
