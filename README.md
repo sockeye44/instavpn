@@ -1,7 +1,7 @@
 ![img](http://i.imgur.com/67dwCdA.png)
 ========
 
-## This project is deprecated! It works well with Ubuntu 14.04, but will not work with next releases
+## This project is deprecated! It will not work with next Ubuntu releases
 
 ### Requirements
 * Ubuntu 14.04
