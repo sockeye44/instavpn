@@ -12,7 +12,7 @@ def run_command(cmd):
             shell=True))
 
 def check_os():
-    if platform.linux_distribution() != ('Ubuntu', '14.04', 'trusty'):
+    if platform.linux_distribution() != ('Ubuntu', '18.04', 'bionic'):
         logger.debug('OS: ' + ' '.join(platform.linux_distribution()))
         return False
     return True
